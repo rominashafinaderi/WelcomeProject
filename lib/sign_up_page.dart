@@ -17,6 +17,11 @@ class _sign_up_pageState extends State<sign_up_page> {
   final password = GlobalKey<FormState>();
 
   bool passwordVisible=false;
+  String firstNameC = "";
+  String lastNameC= "";
+  String phoneC ="";
+  String passwordC ="";
+
 
   @override
   void initState() {
@@ -74,6 +79,11 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: firstname,
                                         child: Expanded(
                                           child: TextFormField2(
+                                            onChanged: (valueF){
+                                              setState(() {
+                                                firstNameC = valueF;
+                                              });
+                                            },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (valueF) {
                                               if (valueF == null || valueF.isEmpty) {
@@ -127,6 +137,11 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: lastname,
                                         child: Expanded(
                                           child: TextFormField2(
+                                            onChanged: (value){
+                                              setState(() {
+                                                lastNameC = value;
+                                              });
+                                            },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
                                               if (value == null || value.isEmpty) {
@@ -135,6 +150,8 @@ class _sign_up_pageState extends State<sign_up_page> {
                                                 return 'last name must be between 5-15 character';
                                               }else if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(value)){
                                                 return 'last name must be persian';
+                                              }else if(lastNameC.contains(firstNameC)){
+                                                return 'last name shouldn\'t contain first name';
                                               }
                                               return null;
                                             },
@@ -180,6 +197,11 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: phone,
                                         child: Expanded(
                                           child: TextFormField(
+                                            onChanged: (value){
+                                              setState(() {
+                                                phoneC = value;
+                                              });
+                                            },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
                                               if (value == null || value.isEmpty) {
@@ -281,6 +303,11 @@ class _sign_up_pageState extends State<sign_up_page> {
                               key: password,
                               child: Expanded(
                                 child: TextFormField(
+                                  onChanged: (value){
+                                    setState(() {
+                                      passwordC = value;
+                                    });
+                                  },
                                   obscureText: passwordVisible,
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   validator: (value) {
@@ -288,6 +315,10 @@ class _sign_up_pageState extends State<sign_up_page> {
                                       return 'Please enter some text';
                                     }else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                       return '8-12 character &number &alphabet& no special character';
+                                    }else if(
+                                            (passwordC.contains(phoneC)
+                                            ))
+                                            {return 'last name shouldn\'t contain firstname &lastname & phone';
                                     }
                                     return null;
                                   },
@@ -342,11 +373,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                                           email.currentState!.validate()&&
                                           password.currentState!.validate()
                                       ) {
-                                        if (email.currentState!.validate()&&password.currentState!.validate()) {
                                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                               sign_in_page()), (Route<dynamic> route) => false);
                                         }
-                                      }
                                     },
                                     child: Column(
                                       children: [
@@ -374,7 +403,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom:5),
                                   child: Text('Don\'t have an account ?',
-                                    style: Theme.of(context).textTheme.headlineSmall,
+                                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16,fontWeight: FontWeight.normal)
                                   ),
                                 ),
                                 GestureDetector(
@@ -385,7 +414,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   child:    Padding(
                                     padding: const EdgeInsets.only(bottom:20),
                                     child: Text('SIGN IN',
-                                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18,fontWeight: FontWeight.bold),
+                                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
                                     ),
                                   )
                                   ,

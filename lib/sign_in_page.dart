@@ -12,8 +12,18 @@ class sign_in_page extends StatefulWidget {
 class _sign_in_pageState extends State<sign_in_page> {
   final email = GlobalKey<FormState>();
   final password = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   bool passwordVisible=false;
 
+@override
+void dispose() {
+  emailController.dispose();
+  passwordController.dispose();
+    super.dispose();
+
+  }
   @override
   void initState(){
     super.initState();
@@ -70,11 +80,14 @@ class _sign_in_pageState extends State<sign_in_page> {
                                   key: email,
                                   child: Expanded(
                                     child: TextFormField(
+                                      controller: emailController,
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
+
+                                      validator: (valueE) {
+
+                                        if (valueE == null || valueE.isEmpty) {
                                           return 'Please enter your email';
-                                        }else if(!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(value)){
+                                        }else if(!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)){
                                           return 'email pattern is wrong';
                                         }
                                         return null;
@@ -119,17 +132,17 @@ class _sign_in_pageState extends State<sign_in_page> {
                                 key: password,
                                 child: Expanded(
                                   child: TextFormField(
+                                    controller: passwordController,
                                     obscureText: passwordVisible,
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
+
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter your password';
-                                      }else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                      }
+                                      else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                         return '8-12 character& number& alphabet&no specialCharacter';
                                       }
-                                      // else if(pass){
-                                      //
-                                      // }
                                       return null;
                                     },
                                     cursorColor: Colors.white,
@@ -207,7 +220,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                         Padding(
                           padding: const EdgeInsets.only(bottom:10),
                           child: Text('Don\'t have an account ?',
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16,fontWeight: FontWeight.normal)
                           ),
                         ),
                           GestureDetector(
@@ -219,7 +232,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                             child:    Padding(
                               padding: const EdgeInsets.only(bottom: 70),
                               child: Text('SIGN UP',
-                                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18,fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
                               ),
                             )
                             ,

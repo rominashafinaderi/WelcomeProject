@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:welcomeproject/constatns.dart';
 import 'package:welcomeproject/log_in_page.dart';
 import 'package:welcomeproject/sign_up_page.dart';
@@ -48,7 +49,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                 Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:16),
+                      padding: const EdgeInsets.symmetric(horizontal:20),
                       child: Column(
                         children:<Widget>[
                           Row(
@@ -66,9 +67,11 @@ class _sign_in_pageState extends State<sign_in_page> {
                             child:  Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children:<Widget> [
-                                const Padding(
-                                  padding: EdgeInsets.only(right:6),
-                                  child: Icon(Icons.alternate_email,color:kPrimaryColor),
+                                Center(
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(right:6),
+                                    child: Icon(Icons.alternate_email,color:kPrimaryColor),
+                                  ),
                                 ),
                                 Form(
                                   key: email,
@@ -88,8 +91,8 @@ class _sign_in_pageState extends State<sign_in_page> {
                                         valueE = (valueE ?? '').trim();
                                         if (valueE.isEmpty) {
                                           errors.add('please enter your email');
-                                        } else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
-                                          errors.add('email pattern is worng');
+                                        }  else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
+                                          errors.add('email pattern is wrong');
                                         }if (errors.isNotEmpty) {
                                           return errors.join('.\n');
                                         }
@@ -127,14 +130,18 @@ class _sign_in_pageState extends State<sign_in_page> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children:<Widget> [
-                              const Padding(
-                                padding: EdgeInsets.only(right:6),
-                                child: Icon(Icons.lock,color:kPrimaryColor),
+                              Center(
+                                child: const Padding(
+                                  padding: EdgeInsets.only(right:6),
+                                  child: Icon(Icons.lock,color:kPrimaryColor),
+                                ),
                               ),
                               Form(
                                 key: password,
                                 child: Expanded(
                                   child: TextFormField(
+                                    maxLength: 12,
+                                    maxLengthEnforcement:MaxLengthEnforcement.none,
                                     onChanged: (value){
                                       if (value.isEmpty) {
                                         password.currentState!.reset();
@@ -150,11 +157,9 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       List<String> errors = [];
                                       value = (value ?? '').trim();
                                       if (value.isEmpty) {
-                                        errors.add('Please enter some text');
-                                      }else if(passwordC.contains(emailC)){
-
+                                        errors.add('Please enter your password');
+                                      }if(passwordC.contains(emailC)){
                                         errors.add('password shouldn\'t contain email');
-                                      }else{
                                         if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                           errors.add('8-12 character &number &alphabet& no special character');
                                         }
@@ -216,7 +221,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                                 children: [
                                   Container(
                                     margin: const EdgeInsets.only(bottom:20,top: 20),
-                                    padding: const EdgeInsets.symmetric(horizontal:80,vertical:13),
+                                    padding: const EdgeInsets.symmetric(horizontal:80,vertical:10),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
                                         color: kPrimaryColor

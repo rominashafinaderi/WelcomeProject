@@ -68,7 +68,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                 const Spacer(),
 
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:15,top:10),
+                                  padding: const EdgeInsets.only(bottom:0,top:10),
                                   child:  Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
@@ -80,6 +80,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: firstname,
                                         child: Expanded(
                                           child: TextFormField2(
+                                            maxLength: 10,
                                             onChanged: (valueF){
                                               if (valueF.isEmpty) {
                                               firstname.currentState!.reset();
@@ -94,9 +95,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               valueF = (valueF ?? '').trim();
                                               if (valueF.isEmpty) {
                                                 errors.add('Please enter your first name');
-                                              }else if(valueF.length<3 ||valueF.length>10){
+                                              } if(valueF.length<3 ||valueF.length>10){
                                                 errors.add('first name must be between 3-10 character');
-                                              }else if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(valueF)){
+                                              } if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(valueF)){
                                                 errors.add('first name must be persian');
                                               }
                                               if (errors.isNotEmpty) {
@@ -134,7 +135,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:15),
+                                  padding: const EdgeInsets.only(bottom:0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
@@ -146,6 +147,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: lastname,
                                         child: Expanded(
                                           child: TextFormField2(
+                                            maxLength: 15,
                                             onChanged: (value){
                                               if (value.isEmpty) {
                                                 lastname.currentState!.reset();
@@ -160,11 +162,11 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               value = (value ?? '').trim();
                                               if (value.isEmpty) {
                                                 errors.add('Please enter your last name');
-                                              }else if(value.length<5 ||value.length>15){
+                                              } if(value.length<5 ||value.length>15){
                                                 errors.add('last name must be between 5-15 character');
-                                              }else if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(value)){
+                                              } if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(value)){
                                                 errors.add('last name must be persian');
-                                              }else if(lastNameC.contains(firstNameC)){
+                                              } if(lastNameC.contains(firstNameC)){
                                                 errors.add('last name shouldn\'t contain first name');
                                               }if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
@@ -201,7 +203,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:15),
+                                  padding: const EdgeInsets.only(bottom: 0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
@@ -213,6 +215,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: phone,
                                         child: Expanded(
                                           child: TextFormField(
+                                            maxLength: 11,
                                             onChanged: (value){
                                               if (value.isEmpty) {
                                                 phone.currentState!.reset();
@@ -227,7 +230,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               value = (value ?? '').trim();
                                               if (value.isEmpty) {
                                                   errors.add('please enter your phone number');
-                                              }else if(!RegExp(r'^[0][9][0-9]{9}$').hasMatch(value)){
+                                              }if(!RegExp(r'^[0][9][0-9]{9}$').hasMatch(value)){
                                                 errors.add('phone must be 11 digit');
                                               } if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
@@ -263,7 +266,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:15),
+                                  padding: const EdgeInsets.only(bottom:20),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
@@ -289,7 +292,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               valueE = (valueE ?? '').trim();
                                               if (valueE.isEmpty) {
                                                 errors.add('please enter your email');
-                                              } else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
+                                              }  if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
                                                 errors.add('email pattern is worng');
                                               }if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
@@ -326,7 +329,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom:15 ),
+                        padding: const EdgeInsets.only(bottom:0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children:<Widget> [
@@ -338,6 +341,8 @@ class _sign_up_pageState extends State<sign_up_page> {
                               key: password,
                               child: Expanded(
                                 child: TextFormField(
+                                  maxLength: 12,
+
                                   onChanged: (value){
                                     if (value.isEmpty) {
                                       password.currentState!.reset();
@@ -353,10 +358,8 @@ class _sign_up_pageState extends State<sign_up_page> {
                                     value = (value ?? '').trim();
                                     if (value.isEmpty) {
                                       errors.add('Please enter some text');
-                                    }else if(passwordC.contains(emailC)){
-
+                                    } if(passwordC.contains(emailC)){
                                       errors.add('password shouldn\'t contain email');
-                                    }else{
                                       if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                         errors.add('8-12 character &number &alphabet& no special character');
                                       }
@@ -423,8 +426,8 @@ class _sign_up_pageState extends State<sign_up_page> {
                                     child: Column(
                                       children: [
                                         Container(
-                                          margin: const EdgeInsets.only(bottom:10),
-                                          padding: const EdgeInsets.symmetric(horizontal:80,vertical:13),
+                                          margin: const EdgeInsets.only(bottom:8),
+                                          padding: const EdgeInsets.symmetric(horizontal:80,vertical:10),
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(24),
                                               color: kPrimaryColor

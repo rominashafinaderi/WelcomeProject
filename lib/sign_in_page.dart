@@ -84,11 +84,14 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       },
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       validator: (valueE) {
-
-                                        if (valueE == null || valueE.isEmpty) {
-                                          return 'Please enter your email';
-                                        }else if(!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)){
-                                          return 'email pattern is wrong';
+                                        List<String> errors = [];
+                                        valueE = (valueE ?? '').trim();
+                                        if (valueE.isEmpty) {
+                                          errors.add('please enter your email');
+                                        } else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
+                                          errors.add('email pattern is worng');
+                                        }if (errors.isNotEmpty) {
+                                          return errors.join('.\n');
                                         }
                                         return null;
                                       },
@@ -144,14 +147,19 @@ class _sign_in_pageState extends State<sign_in_page> {
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
 
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
-                                        return 'Please enter some text';
+                                      List<String> errors = [];
+                                      value = (value ?? '').trim();
+                                      if (value.isEmpty) {
+                                        errors.add('Please enter some text');
                                       }else if(passwordC.contains(emailC)){
-                                        return'password shouldn\'t contain email';
+
+                                        errors.add('password shouldn\'t contain email');
                                       }else{
                                         if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                          return '8-12 character &number &alphabet& no special character';
+                                          errors.add('8-12 character &number &alphabet& no special character');
                                         }
+                                      } if (errors.isNotEmpty) {
+                                        return errors.join('.\n');
                                       }
                                       return null;
                                     },

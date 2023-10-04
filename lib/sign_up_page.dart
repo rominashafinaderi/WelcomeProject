@@ -90,12 +90,17 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (valueF) {
-                                              if (valueF == null || valueF.trim().isEmpty) {
-                                                return 'Please enter your first name';
+                                              List<String> errors = [];
+                                              valueF = (valueF ?? '').trim();
+                                              if (valueF.isEmpty) {
+                                                errors.add('Please enter your first name');
                                               }else if(valueF.length<3 ||valueF.length>10){
-                                                return 'first name must be between 3-10 character';
+                                                errors.add('first name must be between 3-10 character');
                                               }else if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(valueF)){
-                                                return 'first name must be persian';
+                                                errors.add('first name must be persian');
+                                              }
+                                              if (errors.isNotEmpty) {
+                                                return errors.join('.\n');
                                               }
                                               return null;
                                             },
@@ -151,14 +156,18 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
-                                              if (value == null || value.trim().isEmpty) {
-                                                return 'Please enter your last name';
+                                              List<String> errors = [];
+                                              value = (value ?? '').trim();
+                                              if (value.isEmpty) {
+                                                errors.add('Please enter your last name');
                                               }else if(value.length<5 ||value.length>15){
-                                                return 'last name must be between 5-15 character';
+                                                errors.add('last name must be between 5-15 character');
                                               }else if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(value)){
-                                                return 'last name must be persian';
+                                                errors.add('last name must be persian');
                                               }else if(lastNameC.contains(firstNameC)){
-                                                return 'last name shouldn\'t contain first name';
+                                                errors.add('last name shouldn\'t contain first name');
+                                              }if (errors.isNotEmpty) {
+                                                return errors.join('.\n');
                                               }
                                               return null;
                                             },
@@ -214,10 +223,14 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
-                                              if (value == null || value.trim().isEmpty) {
-                                                return  '';
+                                              List<String> errors = [];
+                                              value = (value ?? '').trim();
+                                              if (value.isEmpty) {
+                                                  errors.add('please enter your phone number');
                                               }else if(!RegExp(r'^[0][9][0-9]{9}$').hasMatch(value)){
-                                                return 'phone must be 11 digit';
+                                                errors.add('phone must be 11 digit');
+                                              } if (errors.isNotEmpty) {
+                                                return errors.join('.\n');
                                               }
                                               return null;
                                             },
@@ -271,11 +284,15 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               });
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
-                                            validator: (value) {
-                                              if (value == null || value.trim().isEmpty) {
-                                                return 'Please enter your email';
-                                              }else if(!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(value)){
-                                                return 'email pattern is wrong';
+                                            validator: (valueE) {
+                                              List<String> errors = [];
+                                              valueE = (valueE ?? '').trim();
+                                              if (valueE.isEmpty) {
+                                                errors.add('please enter your email');
+                                              } else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
+                                                errors.add('email pattern is worng');
+                                              }if (errors.isNotEmpty) {
+                                                return errors.join('.\n');
                                               }
                                               return null;
                                             },
@@ -332,17 +349,19 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   obscureText: passwordVisible,
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
-                                      return 'Please enter some text';
+                                    List<String> errors = [];
+                                    value = (value ?? '').trim();
+                                    if (value.isEmpty) {
+                                      errors.add('Please enter some text');
                                     }else if(passwordC.contains(emailC)){
-                                        return'password shouldn\'t contain email';
-                                          }else{
-                                              if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                              return '8-12 character &number &alphabet& no special character';
-                                              }
+
+                                      errors.add('password shouldn\'t contain email');
+                                    }else{
+                                      if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                        errors.add('8-12 character &number &alphabet& no special character');
                                       }
-                                    if((passwordC.contains(phoneC))) {
-                                      return 'password shouldn\'t contain firstname &lastname & phone';
+                                    } if (errors.isNotEmpty) {
+                                      return errors.join('.\n');
                                     }
                                     return null;
                                   },

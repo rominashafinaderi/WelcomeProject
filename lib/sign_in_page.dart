@@ -12,18 +12,12 @@ class sign_in_page extends StatefulWidget {
 class _sign_in_pageState extends State<sign_in_page> {
   final email = GlobalKey<FormState>();
   final password = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  String passwordC ="";
+  String emailC ="";
 
   bool passwordVisible=false;
 
-@override
-void dispose() {
-  emailController.dispose();
-  passwordController.dispose();
-    super.dispose();
 
-  }
   @override
   void initState(){
     super.initState();
@@ -80,9 +74,15 @@ void dispose() {
                                   key: email,
                                   child: Expanded(
                                     child: TextFormField(
-                                      controller: emailController,
+                                      onChanged: (value){
+                                        if (value.isEmpty) {
+                                          email.currentState!.reset();
+                                        }
+                                        setState(() {
+                                          emailC = value;
+                                        });
+                                      },
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
-
                                       validator: (valueE) {
 
                                         if (valueE == null || valueE.isEmpty) {
@@ -132,16 +132,26 @@ void dispose() {
                                 key: password,
                                 child: Expanded(
                                   child: TextFormField(
-                                    controller: passwordController,
+                                    onChanged: (value){
+                                      if (value.isEmpty) {
+                                        password.currentState!.reset();
+                                      }
+                                      setState(() {
+                                        passwordC = value;
+                                      });
+                                    },
                                     obscureText: passwordVisible,
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
 
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter your password';
-                                      }
-                                      else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                        return '8-12 character& number& alphabet&no specialCharacter';
+                                      if (value == null || value.trim().isEmpty) {
+                                        return 'Please enter some text';
+                                      }else if(passwordC.contains(emailC)){
+                                        return'password shouldn\'t contain email';
+                                      }else{
+                                        if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                          return '8-12 character &number &alphabet& no special character';
+                                        }
                                       }
                                       return null;
                                     },

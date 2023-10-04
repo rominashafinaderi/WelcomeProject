@@ -21,6 +21,7 @@ class _sign_up_pageState extends State<sign_up_page> {
   String lastNameC= "";
   String phoneC ="";
   String passwordC ="";
+  String emailC ="";
 
 
   @override
@@ -80,13 +81,16 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         child: Expanded(
                                           child: TextFormField2(
                                             onChanged: (valueF){
+                                              if (valueF.isEmpty) {
+                                              firstname.currentState!.reset();
+                                              }
                                               setState(() {
                                                 firstNameC = valueF;
                                               });
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (valueF) {
-                                              if (valueF == null || valueF.isEmpty) {
+                                              if (valueF == null || valueF.trim().isEmpty) {
                                                 return 'Please enter your first name';
                                               }else if(valueF.length<3 ||valueF.length>10){
                                                 return 'first name must be between 3-10 character';
@@ -138,13 +142,16 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         child: Expanded(
                                           child: TextFormField2(
                                             onChanged: (value){
+                                              if (value.isEmpty) {
+                                                lastname.currentState!.reset();
+                                              }
                                               setState(() {
                                                 lastNameC = value;
                                               });
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
-                                              if (value == null || value.isEmpty) {
+                                              if (value == null || value.trim().isEmpty) {
                                                 return 'Please enter your last name';
                                               }else if(value.length<5 ||value.length>15){
                                                 return 'last name must be between 5-15 character';
@@ -198,13 +205,16 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         child: Expanded(
                                           child: TextFormField(
                                             onChanged: (value){
+                                              if (value.isEmpty) {
+                                                phone.currentState!.reset();
+                                              }
                                               setState(() {
                                                 phoneC = value;
                                               });
                                             },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
-                                              if (value == null || value.isEmpty) {
+                                              if (value == null || value.trim().isEmpty) {
                                                 return  '';
                                               }else if(!RegExp(r'^[0][9][0-9]{9}$').hasMatch(value)){
                                                 return 'phone must be 11 digit';
@@ -252,9 +262,17 @@ class _sign_up_pageState extends State<sign_up_page> {
                                         key: email,
                                         child: Expanded(
                                           child: TextFormField(
+                                            onChanged: (value){
+                                              if (value.isEmpty) {
+                                                email.currentState!.reset();
+                                              }
+                                              setState(() {
+                                                emailC = value;
+                                              });
+                                            },
                                             autovalidateMode: AutovalidateMode.onUserInteraction,
                                             validator: (value) {
-                                              if (value == null || value.isEmpty) {
+                                              if (value == null || value.trim().isEmpty) {
                                                 return 'Please enter your email';
                                               }else if(!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(value)){
                                                 return 'email pattern is wrong';
@@ -304,6 +322,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                               child: Expanded(
                                 child: TextFormField(
                                   onChanged: (value){
+                                    if (value.isEmpty) {
+                                      password.currentState!.reset();
+                                    }
                                     setState(() {
                                       passwordC = value;
                                     });
@@ -311,14 +332,17 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   obscureText: passwordVisible,
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
+                                    if (value == null || value.trim().isEmpty) {
                                       return 'Please enter some text';
-                                    }else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                      return '8-12 character &number &alphabet& no special character';
-                                    }else if(
-                                            (passwordC.contains(phoneC)
-                                            ))
-                                            {return 'last name shouldn\'t contain firstname &lastname & phone';
+                                    }else if(passwordC.contains(emailC)){
+                                        return'password shouldn\'t contain email';
+                                          }else{
+                                              if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                              return '8-12 character &number &alphabet& no special character';
+                                              }
+                                      }
+                                    if((passwordC.contains(phoneC))) {
+                                      return 'password shouldn\'t contain firstname &lastname & phone';
                                     }
                                     return null;
                                   },

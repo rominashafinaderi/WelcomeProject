@@ -11,26 +11,46 @@ class sign_in_page extends StatefulWidget {
 }
 
 class _sign_in_pageState extends State<sign_in_page> {
+
   final email = GlobalKey<FormState>();
   final password = GlobalKey<FormState>();
   String passwordC ="";
   String emailC ="";
-
   bool passwordVisible=false;
-
+  late List<FocusNode> focus;
+  List<bool> bools = List.generate(2, (index) => false);
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    passwordVisible=true;
-  }
+    passwordVisible = true;
+    focus = List.generate(2, (index) => FocusNode());
+    for (int i = 0; i < 2; i++) {
+      focus[i].addListener(() {
+        if (!focus[i].hasFocus && emailC.isNotEmpty) {
+          bools[i] = !bools[i];
+          var check = (i == 0 ? email : password).currentState!.validate();
+          if (check) {
+            bools[i] = false;
+          }
+        }
+      });
 
+    }
+  }
+  @override
+  void dispose() {
+    focus[0].dispose();
+    focus[1].dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
     return  SafeArea(
       child: Scaffold(
         body: CustomScrollView(
+          physics:ClampingScrollPhysics(),
           slivers:[ SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
@@ -67,16 +87,14 @@ class _sign_in_pageState extends State<sign_in_page> {
                             child:  Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children:<Widget> [
-                                Center(
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(right:6),
-                                    child: Icon(Icons.alternate_email,color:kPrimaryColor),
-                                  ),
-                                ),
                                 Form(
                                   key: email,
                                   child: Expanded(
                                     child: TextFormField(
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.deny(
+                                            RegExp(r'\s')),
+                                      ],
                                       onChanged: (value){
                                         if (value.isEmpty) {
                                           email.currentState!.reset();
@@ -85,7 +103,8 @@ class _sign_in_pageState extends State<sign_in_page> {
                                           emailC = value;
                                         });
                                       },
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      autovalidateMode: bools[0] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                      focusNode: focus[0],
                                       validator: (valueE) {
                                         List<String> errors = [];
                                         valueE = (valueE ?? '').trim();
@@ -98,11 +117,12 @@ class _sign_in_pageState extends State<sign_in_page> {
                                         }
                                         return null;
                                       },
+                                       style: TextStyle(color: Colors.white),
                                       cursorColor: Colors.white,
-
                                       decoration:  InputDecoration(
+                                        prefixIcon:Icon(Icons.alternate_email,color:kPrimaryColor),
                                         hintText: "EMAIL",
-                                        fillColor: Colors.white,
+                                        hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
                                         focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: kPrimaryColor
@@ -130,18 +150,16 @@ class _sign_in_pageState extends State<sign_in_page> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children:<Widget> [
-                              Center(
-                                child: const Padding(
-                                  padding: EdgeInsets.only(right:6),
-                                  child: Icon(Icons.lock,color:kPrimaryColor),
-                                ),
-                              ),
+
                               Form(
                                 key: password,
                                 child: Expanded(
                                   child: TextFormField(
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.deny(
+                                          RegExp(r'\s')),
+                                    ],
                                     maxLength: 12,
-                                    maxLengthEnforcement:MaxLengthEnforcement.none,
                                     onChanged: (value){
                                       if (value.isEmpty) {
                                         password.currentState!.reset();
@@ -151,8 +169,9 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       });
                                     },
                                     obscureText: passwordVisible,
-                                    autovalidateMode: AutovalidateMode.onUserInteraction,
-
+                                    autovalidateMode: bools[1] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                    focusNode: focus[1],
+                                    style: TextStyle(color: Colors.white),
                                     validator: (value) {
                                       List<String> errors = [];
                                       value = (value ?? '').trim();
@@ -160,16 +179,24 @@ class _sign_in_pageState extends State<sign_in_page> {
                                         errors.add('Please enter your password');
                                       }if(passwordC.contains(emailC)){
                                         errors.add('password shouldn\'t contain email');
-                                        if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                          errors.add('8-12 character &number &alphabet& no special character');
-                                        }
-                                      } if (errors.isNotEmpty) {
+                                      }else  if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                     if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){
+                                        errors.add('password must contain number ');
+                                      }if(RegExp(r'^[0-9]+$').hasMatch(value)){
+                                        errors.add('password must contain alphabet');
+                                      }
+                                     errors.add('8-12 character without special character');
+                                      }
+                                        if (errors.isNotEmpty) {
                                         return errors.join('.\n');
                                       }
                                       return null;
                                     },
                                     cursorColor: Colors.white,
                                     decoration:  InputDecoration(
+                                        prefixIcon: Icon(Icons.lock,color:kPrimaryColor),
+
+                                        counterText:"",
                                         suffixIcon: IconButton(
                                           icon: Icon(
                                               passwordVisible
@@ -184,6 +211,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                                           },
                                         ),
                                         hintText: "PASSWORD",
+                                        hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
                                         fillColor: Colors.white,
                                         focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -209,57 +237,59 @@ class _sign_in_pageState extends State<sign_in_page> {
                             ],
                           ),
                           const  Spacer(),
-                          FittedBox(
-                            child: GestureDetector(
-                              onTap: (){
-                                if (email.currentState!.validate()&&password.currentState!.validate()) {
-                                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                      log_in_page()), (Route<dynamic> route) => false);
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom:20,top: 20),
-                                    padding: const EdgeInsets.symmetric(horizontal:80,vertical:10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(24),
-                                        color: kPrimaryColor
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text("LOG IN",
-                                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black)),
-                                        const SizedBox(width: 16),
 
-                                      ],
+                        FittedBox(
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom:20,top:45),
+                                child: ElevatedButton(
+                                    onPressed: (){
+                                          if (email.currentState!.validate()&&password.currentState!.validate()) {
+                                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                                    log_in_page()), (Route<dynamic> route) => false);
+                                              }
+                                    },
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: kPrimaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(24),
+                                        )
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal:80,vertical:15),
 
+                                      child: Text(
+                                        "LOG IN",
+                                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                            color: Colors.black
+                                        ),
+                                      ),
+                                    )//Padding
+                                ),
                           ),
+                        ),
+
                         Padding(
-                          padding: const EdgeInsets.only(bottom:10),
+                          padding: const EdgeInsets.only(bottom:0),
                           child: Text('Don\'t have an account ?',
                             style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16,fontWeight: FontWeight.normal)
                           ),
                         ),
-                          GestureDetector(
-                            onTap: (){
+                          TextButton(
+                            onPressed: (){
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context)=>  sign_up_page())
                               );
                             },
-                            child:    Padding(
-                              padding: const EdgeInsets.only(bottom: 70),
-                              child: Text('SIGN UP',
+                            style:TextButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                            ),
+                            child:  Text('SIGN UP',
                                 style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
                               ),
-                            )
-                            ,
-                          )
+
+
+                          ),
+                          SizedBox(height:45)
                         ]
                     )
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:welcomeproject/constatns.dart';
 import 'package:welcomeproject/sign_in_page.dart';
 import 'package:welcomeproject/textFormField2.dart';
@@ -15,19 +16,41 @@ class _sign_up_pageState extends State<sign_up_page> {
   final phone = GlobalKey<FormState>();
   final email = GlobalKey<FormState>();
   final password = GlobalKey<FormState>();
-
+  late List<GlobalKey<FormState>> formKeys = List.generate(5, (index) => GlobalKey());
   bool passwordVisible=false;
   String firstNameC = "";
   String lastNameC= "";
   String phoneC ="";
   String passwordC ="";
   String emailC ="";
-
+  late List<FocusNode> focus;
+  List<bool> bools = List.generate(5, (index) => false);
 
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
+    focus = List.generate(5, (index) => FocusNode());
+    for (int i = 0; i <5; i++) {
+      focus[i].addListener(() {
+        if (!focus[i].hasFocus && emailC.isNotEmpty) {
+          bools[i] = !bools[i];
+          if (formKeys[i].currentState!.validate()) {
+            bools[i] = false;
+          }
+        }
+      });
+    }
+  }
+  @override
+  void dispose() {
+    focus[0].dispose();
+    focus[1].dispose();
+    focus[2].dispose();
+    focus[3].dispose();
+    focus[4].dispose();
+
+    super.dispose();
   }
 
   @override
@@ -36,7 +59,9 @@ class _sign_up_pageState extends State<sign_up_page> {
     return  SafeArea(
       child: Scaffold(
         body: CustomScrollView(
-            slivers:[ SliverFillRemaining(
+            physics:ClampingScrollPhysics(),
+            slivers:[
+              SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 children:<Widget> [
@@ -54,7 +79,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                   Expanded(
                       flex: 2,
                       child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal:16),
+                          padding: const EdgeInsets.symmetric(horizontal:18),
                           child: Column(
                               children:<Widget>[
                                 Row(
@@ -65,31 +90,33 @@ class _sign_up_pageState extends State<sign_up_page> {
                                     ),
                                   ],
                                 ),
-                                const Spacer(),
 
+                                const Spacer(),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:0,top:10),
+                                  padding: const EdgeInsets.only(bottom:10,top:10),
                                   child:  Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right:6),
-                                        child: Icon(Icons.person_outline,color:kPrimaryColor),
-                                      ),
                                       Form(
-                                        key: firstname,
+                                        key: formKeys[0],
                                         child: Expanded(
                                           child: TextFormField2(
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  RegExp(r'\s')),
+                                            ],
                                             maxLength: 10,
                                             onChanged: (valueF){
                                               if (valueF.isEmpty) {
-                                              firstname.currentState!.reset();
+                                                formKeys[0].currentState!.reset();
                                               }
                                               setState(() {
                                                 firstNameC = valueF;
                                               });
                                             },
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                                            style: TextStyle(color: Colors.white),
+                                            autovalidateMode: bools[0] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                            focusNode: focus[0],
                                             validator: (valueF) {
                                               List<String> errors = [];
                                               valueF = (valueF ?? '').trim();
@@ -108,6 +135,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             cursorColor: Colors.white,
                                             textDirection: TextDirection.rtl,
                                             decoration:  InputDecoration(
+                                              prefixIcon:Icon(Icons.person_outline,color:kPrimaryColor),
+                                              hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
+                                              counterText:"",
                                                 hintText: "FIRST NAME",
                                                 fillColor: Colors.white,
                                               focusedBorder: OutlineInputBorder(
@@ -135,28 +165,31 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:0),
+                                  padding: const EdgeInsets.only(bottom:10),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right:6),
-                                        child: Icon(Icons.person_add_outlined,color:kPrimaryColor),
-                                      ),
+
                                       Form(
-                                        key: lastname,
+                                        key: formKeys[1],
                                         child: Expanded(
                                           child: TextFormField2(
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  RegExp(r'\s')),
+                                            ],
                                             maxLength: 15,
                                             onChanged: (value){
                                               if (value.isEmpty) {
-                                                lastname.currentState!.reset();
+                                                formKeys[1].currentState!.reset();
                                               }
                                               setState(() {
                                                 lastNameC = value;
                                               });
                                             },
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                                            style: TextStyle(color: Colors.white),
+                                            autovalidateMode: bools[1] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                            focusNode: focus[1],
                                             validator: (value) {
                                               List<String> errors = [];
                                               value = (value ?? '').trim();
@@ -176,6 +209,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             textDirection: TextDirection.rtl,
                                             cursorColor: Colors.white,
                                             decoration:  InputDecoration(
+                                              prefixIcon:Icon(Icons.person_add_outlined,color:kPrimaryColor),
+                                              counterText:"",
+                                              hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
                                               hintText: "LAST NAME",
                                               fillColor: Colors.white,
                                               focusedBorder: OutlineInputBorder(
@@ -203,28 +239,31 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 0),
+                                  padding: const EdgeInsets.only(bottom:10),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right:6),
-                                        child: Icon(Icons.phone,color:kPrimaryColor),
-                                      ),
+
                                       Form(
-                                        key: phone,
+                                        key:formKeys[2],
                                         child: Expanded(
                                           child: TextFormField(
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  RegExp(r'\s')),
+                                            ],
                                             maxLength: 11,
                                             onChanged: (value){
                                               if (value.isEmpty) {
-                                                phone.currentState!.reset();
+                                                formKeys[2].currentState!.reset();
                                               }
                                               setState(() {
                                                 phoneC = value;
                                               });
                                             },
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                                            style: TextStyle(color: Colors.white),
+                                            autovalidateMode: bools[2] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                            focusNode: focus[2],
                                             validator: (value) {
                                               List<String> errors = [];
                                               value = (value ?? '').trim();
@@ -239,6 +278,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             },
                                             cursorColor: Colors.white,
                                             decoration:  InputDecoration(
+                                              counterText:"",
+                                              hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
+                                              prefixIcon:Icon(Icons.phone,color:kPrimaryColor),
                                               hintText: "PHONE",
                                               fillColor: Colors.white,
                                               focusedBorder: OutlineInputBorder(
@@ -266,27 +308,30 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:20),
+                                  padding: const EdgeInsets.only(bottom:10),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children:<Widget> [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right:6),
-                                        child: Icon(Icons.alternate_email_outlined,color:kPrimaryColor),
-                                      ),
+
                                       Form(
-                                        key: email,
+                                        key: formKeys[3],
                                         child: Expanded(
                                           child: TextFormField(
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.deny(
+                                                  RegExp(r'\s')),
+                                            ],
                                             onChanged: (value){
                                               if (value.isEmpty) {
-                                                email.currentState!.reset();
+                                                formKeys[3].currentState!.reset();
                                               }
                                               setState(() {
                                                 emailC = value;
                                               });
                                             },
-                                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                                            style: TextStyle(color: Colors.white),
+                                            autovalidateMode: bools[3] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                            focusNode: focus[3],
                                             validator: (valueE) {
                                               List<String> errors = [];
                                               valueE = (valueE ?? '').trim();
@@ -302,8 +347,10 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             cursorColor: Colors.white,
 
                                             decoration:  InputDecoration(
-                                                hintText: "EMAIL",
-                                                fillColor: Colors.white,
+                                              prefixIcon:Icon(Icons.alternate_email_outlined,color:kPrimaryColor),
+                                              hintText: "EMAIL",
+                                              hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
+                                              fillColor: Colors.white,
                                               focusedBorder: OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                       color: kPrimaryColor
@@ -328,143 +375,152 @@ class _sign_up_pageState extends State<sign_up_page> {
                                     ],
                                   ),
                                 ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom:0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children:<Widget> [
-                            const Padding(
-                              padding: EdgeInsets.only(right:6),
-                              child: Icon(Icons.lock,color:kPrimaryColor),
-                            ),
-                            Form(
-                              key: password,
-                              child: Expanded(
-                                child: TextFormField(
-                                  maxLength: 12,
+                            Padding(
+                              padding: const EdgeInsets.only(bottom:10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children:<Widget> [
 
-                                  onChanged: (value){
-                                    if (value.isEmpty) {
-                                      password.currentState!.reset();
-                                    }
-                                    setState(() {
-                                      passwordC = value;
-                                    });
-                                  },
-                                  obscureText: passwordVisible,
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  validator: (value) {
-                                    List<String> errors = [];
-                                    value = (value ?? '').trim();
-                                    if (value.isEmpty) {
-                                      errors.add('Please enter some text');
-                                    } if(passwordC.contains(emailC)){
-                                      errors.add('password shouldn\'t contain email');
-                                      if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                        errors.add('8-12 character &number &alphabet& no special character');
-                                      }
-                                    } if (errors.isNotEmpty) {
-                                      return errors.join('.\n');
-                                    }
-                                    return null;
-                                  },
-                                  cursorColor: Colors.white,
-                                  decoration:  InputDecoration(
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                          passwordVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,color:Colors.grey[700]),
-                                      onPressed: (){
-                                        setState(
-                                              () {
-                                            passwordVisible = !passwordVisible;
-                                          },
-                                        );
-                                      },
-                                    ),
-                                    hintText: "PASSWORD",
-                                    fillColor: Colors.white,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: kPrimaryColor
-                                        )
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.white.withOpacity(0.5)
-                                        )
-                                    ),
-                                    errorBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.red
-                                        )
-                                    ),
-                                  ),
-                                  keyboardType: TextInputType.text,
-
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                                const  Spacer(),
-                                FittedBox(
-                                  child: GestureDetector(
-                                    onTap: (){
-                                      if (firstname.currentState!.validate()&&
-                                          lastname.currentState!.validate()&&
-                                           phone.currentState!.validate()&&
-                                          email.currentState!.validate()&&
-                                          password.currentState!.validate()
-                                      ) {
-                                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                              sign_in_page()), (Route<dynamic> route) => false);
-                                        }
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(bottom:8),
-                                          padding: const EdgeInsets.symmetric(horizontal:80,vertical:10),
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(24),
-                                              color: kPrimaryColor
+                                  Form(
+                                    key: formKeys[4],
+                                    child: Expanded(
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.deny(
+                                              RegExp(r'\s')),
+                                        ],
+                                        maxLength: 12,
+                                        onChanged: (value){
+                                          if (value.isEmpty) {
+                                            formKeys[4].currentState!.reset();
+                                          }
+                                          setState(() {
+                                            passwordC = value;
+                                          });
+                                        },
+                                        style: TextStyle(color: Colors.white),
+                                        obscureText: passwordVisible,
+                                        autovalidateMode: bools[4] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                        focusNode: focus[4],
+                                        validator: (value) {
+                                          List<String> errors = [];
+                                          value = (value ?? '').trim();
+                                          if (value.isEmpty) {
+                                            errors.add('Please enter your password');
+                                          }if(passwordC.contains(emailC)){
+                                            errors.add('password shouldn\'t contain email');
+                                          }else  if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                            if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){
+                                              errors.add('password must contain number ');
+                                            }if(RegExp(r'^[0-9]+$').hasMatch(value)){
+                                              errors.add('password must contain alphabet');
+                                            }
+                                            errors.add('8-12 character without special character');
+                                          }
+                                          if (errors.isNotEmpty) {
+                                            return errors.join('.\n');
+                                          }
+                                          return null;
+                                        },
+                                        cursorColor: Colors.white,
+                                        decoration:  InputDecoration(
+                                          counterText:"",
+                                          prefixIcon:Icon(Icons.lock,color:kPrimaryColor),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                                passwordVisible
+                                                    ? Icons.visibility
+                                                    : Icons.visibility_off,color:Colors.grey[700]),
+                                            onPressed: (){
+                                              setState(
+                                                    () {
+                                                  passwordVisible = !passwordVisible;
+                                                },
+                                              );
+                                            },
                                           ),
-                                          child: Row(
-                                            children: [
-                                              Text("SIGN UP",
-                                                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black)),
-                                              const SizedBox(width: 16),
-
-                                            ],
+                                          hintText: "PASSWORD",
+                                          hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
+                                          fillColor: Colors.white,
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: kPrimaryColor
+                                              )
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white.withOpacity(0.5)
+                                              )
+                                          ),
+                                          errorBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.red
+                                              )
                                           ),
                                         ),
-                                      ],
+                                        keyboardType: TextInputType.text,
+
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                                const  Spacer(),
+                                FittedBox(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom:10,top: 10),
+                                    child: ElevatedButton(
+                                        onPressed: (){
+                                          if (firstname.currentState!.validate()&&
+                                              lastname.currentState!.validate()&&
+                                              phone.currentState!.validate()&&
+                                              email.currentState!.validate()&&
+                                              password.currentState!.validate()
+                                          ) {
+                                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                                sign_in_page()), (Route<dynamic> route) => false);
+                                          }
+                                        },
+                                        style: TextButton.styleFrom(
+                                            backgroundColor: kPrimaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(24),
+                                            )
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal:80,vertical:15),
+
+                                          child: Text(
+                                            "SIGN UP",
+                                            style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                                color: Colors.black
+                                            ),
+                                          ),
+                                        )//Padding
                                     ),
                                   ),
-
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom:5),
+                                  padding: const EdgeInsets.only(bottom:0),
                                   child: Text('Don\'t have an account ?',
                                     style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16,fontWeight: FontWeight.normal)
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: (){
-                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                        sign_in_page( )), (Route<dynamic> route) => false);
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context)=>  sign_in_page())
+                                    );
                                   },
-                                  child:    Padding(
-                                    padding: const EdgeInsets.only(bottom:20),
-                                    child: Text('SIGN IN',
-                                      style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                  ,
-                                )
+                                  style:TextButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  child:  Text('SIGN UP',
+                                    style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                SizedBox(width: 10,)
                               ]
                           )
 

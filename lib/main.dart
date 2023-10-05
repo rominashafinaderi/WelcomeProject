@@ -11,9 +11,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
         debugShowCheckedModeBanner: false,
         title: 'welcomePage',
         theme: ThemeData(
+          useMaterial3: true,
+
+               colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
           textTheme: const TextTheme(
               headlineMedium: TextStyle(
                   color: Colors.white,
@@ -33,7 +37,6 @@ class MyApp extends StatelessWidget {
               labelSmall: TextStyle(
                   color: Colors.white,
                   fontSize: 13
-
               )
           ),
           inputDecorationTheme: const InputDecorationTheme(
@@ -41,7 +44,6 @@ class MyApp extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.white)
               )
           ),
-          brightness: Brightness.dark,
           primaryColor: kPrimaryColor,
           scaffoldBackgroundColor: kBackgroundColor,
         ),
@@ -97,31 +99,37 @@ class WelcomePage extends StatelessWidget {
                               ),
                             ),
                             FittedBox(
-                              child: GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context)=> const sign_in_page())
-                                  );
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom:40,top: 20),
-                                  padding: const EdgeInsets.symmetric(horizontal:14,vertical:14),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(22),
-                                      color: kPrimaryColor
-                                  ),
-                                  child: Row(
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom:40,top: 20),
+                                child: ElevatedButton(
+                                    onPressed: (){
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context)=> const sign_in_page())
+                                      );
+                                    },
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: kPrimaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(22),
+                                        )
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal:14,vertical:14),
+
+                                      child: Row(
                                     children: [
-                                      Text("START LEARNING",
-                                          style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black)),
-                                      const SizedBox(width: 16),
-                                      const Icon(Icons.arrow_forward,
-                                          color: Colors.black)
-                                    ],
-                                  ),
+                                          Text("START LEARNING",
+                                              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black)),
+                                        const SizedBox(width: 16),
+                                        const Icon(Icons.arrow_forward,
+                                            color: Colors.black)
+                                  ],
+                                ),
+                                    )//Padding
                                 ),
                               ),
-                            )
+                            ),
+
                           ],
                         )
                     )

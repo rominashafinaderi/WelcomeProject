@@ -179,7 +179,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                                         errors.add('Please enter your password');
                                       }if(passwordC.contains(emailC)){
                                         errors.add('password shouldn\'t contain email');
-                                      }else  if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                      }else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                      if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){
                                         errors.add('password must contain number ');
                                       }if(RegExp(r'^[0-9]+$').hasMatch(value)){

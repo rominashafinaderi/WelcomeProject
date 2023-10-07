@@ -122,12 +122,14 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               valueF = (valueF ?? '').trim();
                                               if (valueF.isEmpty) {
                                                 errors.add('Please enter your first name');
-                                              } if(valueF.length<3 ||valueF.length>10){
+                                              }
+                                              if(valueF.length<3 ||valueF.length>10){
                                                 errors.add('first name must be between 3-10 character');
-                                              } if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(valueF)){
+                                              }
+                                              if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(valueF)){
                                                 errors.add('first name must be persian');
                                               }
-                                              if (errors.isNotEmpty) {
+                                               if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
                                               }
                                               return null;
@@ -195,13 +197,13 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               value = (value ?? '').trim();
                                               if (value.isEmpty) {
                                                 errors.add('Please enter your last name');
-                                              } if(value.length<5 ||value.length>15){
-                                                errors.add('last name must be between 5-15 character');
-                                              } if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(value)){
-                                                errors.add('last name must be persian');
-                                              } if(lastNameC.contains(firstNameC)){
+                                              } else if(lastNameC.contains(firstNameC)){
                                                 errors.add('last name shouldn\'t contain first name');
-                                              }if (errors.isNotEmpty) {
+                                                if(!RegExp(r'^[\u0600-\u06FF\s]+\{5,15}$').hasMatch(value)){
+                                                  errors.add('last name must be persian between 5-15 character');
+                                                }
+                                              }
+                                              if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
                                               }
                                               return null;
@@ -269,7 +271,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               value = (value ?? '').trim();
                                               if (value.isEmpty) {
                                                   errors.add('please enter your phone number');
-                                              }if(!RegExp(r'^[0][9][0-9]{9}$').hasMatch(value)){
+                                              } else if(!RegExp(r'^[0][9][0-9]{9}$').hasMatch(value)){
                                                 errors.add('phone must be 11 digit');
                                               } if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
@@ -337,8 +339,8 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               valueE = (valueE ?? '').trim();
                                               if (valueE.isEmpty) {
                                                 errors.add('please enter your email');
-                                              }  if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
-                                                errors.add('email pattern is worng');
+                                              }  else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
+                                                errors.add('email pattern is wrong');
                                               }if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
                                               }
@@ -516,7 +518,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   style:TextButton.styleFrom(
                                     backgroundColor: Colors.transparent,
                                   ),
-                                  child:  Text('SIGN UP',
+                                  child:  Text('LOG IN',
                                     style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
                                   ),
                                 ),

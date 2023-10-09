@@ -177,15 +177,17 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       value = (value ?? '').trim();
                                       if (value.isEmpty) {
                                         errors.add('Please enter your password');
+                                      }
+                                      else if (value.length != 12) {
+                                        errors.add('password should be 8-12 character \n & without special character');
                                       }if(passwordC.contains(emailC)){
                                         errors.add('password shouldn\'t contain email');
-                                      }else if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
+                                      } if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                      if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){
                                         errors.add('password must contain number ');
                                       }if(RegExp(r'^[0-9]+$').hasMatch(value)){
                                         errors.add('password must contain alphabet');
                                       }
-                                     errors.add('8-12 character without special character');
                                       }
                                         if (errors.isNotEmpty) {
                                         return errors.join('.\n');

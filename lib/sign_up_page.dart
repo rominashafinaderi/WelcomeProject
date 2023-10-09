@@ -14,22 +14,20 @@ class _sign_up_pageState extends State<sign_up_page> {
 
   late List<GlobalKey<FormState>> formKeys = List.generate(5, (index) => GlobalKey());
   bool passwordVisible=false;
-  String firstNameC = "";
-  String lastNameC= "";
-  String phoneC ="";
-  String passwordC ="";
-  String emailC ="";
+
   late List<FocusNode> focus;
   List<bool> bools = List.generate(5, (index) => false);
+   late List<String> inputs ;
 
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
+    inputs = List.generate(5, (index) => '');
     focus = List.generate(5, (index) => FocusNode());
     for (int i = 0; i <5; i++) {
       focus[i].addListener(() {
-        if (!focus[i].hasFocus && emailC.isNotEmpty) {
+        if (!focus[i].hasFocus && inputs[i].isNotEmpty) {
           bools[i] = !bools[i];
           if (formKeys[i].currentState!.validate()) {
             bools[i] = false;
@@ -107,11 +105,11 @@ class _sign_up_pageState extends State<sign_up_page> {
                                                 formKeys[0].currentState!.reset();
                                               }
                                               setState(() {
-                                                firstNameC = valueF;
+                                                inputs[0] = valueF;
                                               });
                                             },
                                             style: TextStyle(color: Colors.white),
-                                            autovalidateMode: bools[0] ? AutovalidateMode.disabled : AutovalidateMode.onUserInteraction,
+                                            autovalidateMode: bools[0] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                                             focusNode: focus[0],
                                             validator: (valueF) {
                                               List<String> errors = [];
@@ -119,7 +117,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               if (valueF.isEmpty) {
                                                 errors.add('Please enter your first name');
                                               }
-                                              else if(valueF.length<3 ||valueF.length>10){
+                                              else  if(valueF.length<3 ||valueF.length>10){
                                                 errors.add('first name must be between 3-10 character');
                                               }
                                                if(!RegExp(r'^[\u0600-\u06FF\s]+$').hasMatch(valueF)){
@@ -182,7 +180,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                                 formKeys[1].currentState!.reset();
                                               }
                                               setState(() {
-                                                lastNameC = value;
+                                                inputs[1] = value;
                                               });
                                             },
                                             style: TextStyle(color: Colors.white),
@@ -196,7 +194,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               }
                                               else if(value.length<5||value.length>15){
                                                 errors.add('last name must be persian');
-                                              }if(lastNameC.contains(firstNameC)){
+                                              }if(value[1].contains(value[0])){
                                                 errors.add('last name shouldn\'t contain first name');
                                               } else if(!RegExp(r'^[\u0600-\u06FF\s]+\{5,15}$').hasMatch(value)){
                                                 errors.add('last name must be persian between 5-15 character');
@@ -258,7 +256,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                                 formKeys[2].currentState!.reset();
                                               }
                                               setState(() {
-                                                phoneC = value;
+                                                inputs[2] = value;
                                               });
                                             },
                                             style: TextStyle(color: Colors.white),
@@ -330,7 +328,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                                 formKeys[3].currentState!.reset();
                                               }
                                               setState(() {
-                                                emailC = value;
+                                                inputs[3] = value;
                                               });
                                             },
                                             style: TextStyle(color: Colors.white),
@@ -399,7 +397,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             formKeys[4].currentState!.reset();
                                           }
                                           setState(() {
-                                            passwordC = value;
+                                            inputs[4] = value;
                                           });
                                         },
                                         style: TextStyle(color: Colors.white),
@@ -413,7 +411,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                                             errors.add('Please enter your password');
                                           }  else if (value.length != 12) {
                                             errors.add('password should be 8-12 character \n & without special character');
-                                          } if(passwordC.contains(emailC)){
+                                          } if(value[4].contains(value[3])){
                                             errors.add('password shouldn\'t contain email');
                                           }  if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                             if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){

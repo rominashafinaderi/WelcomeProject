@@ -12,25 +12,25 @@ class sign_in_page extends StatefulWidget {
 
 class _sign_in_pageState extends State<sign_in_page> {
 
-  final email = GlobalKey<FormState>();
-  final password = GlobalKey<FormState>();
-  String passwordC ="";
-  String emailC ="";
+  late List<GlobalKey<FormState>> formKeys = List.generate(2, (index) => GlobalKey());
+
+
   bool passwordVisible=false;
   late List<FocusNode> focus;
   List<bool> bools = List.generate(2, (index) => false);
+  late List<String> inputs ;
 
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
     focus = List.generate(2, (index) => FocusNode());
+    inputs = List.generate(2, (index) => '');
     for (int i = 0; i < 2; i++) {
       focus[i].addListener(() {
-        if (!focus[i].hasFocus && emailC.isNotEmpty) {
+        if (!focus[i].hasFocus && inputs[i].isNotEmpty) {
           bools[i] = !bools[i];
-          var check = (i == 0 ? email : password).currentState!.validate();
-          if (check) {
+          if (formKeys[i].currentState!.validate()) {
             bools[i] = false;
           }
         }
@@ -88,7 +88,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children:<Widget> [
                                 Form(
-                                  key: email,
+                                  key: formKeys[0],
                                   child: Expanded(
                                     child: TextFormField(
                                       inputFormatters: [
@@ -97,10 +97,10 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       ],
                                       onChanged: (value){
                                         if (value.isEmpty) {
-                                          email.currentState!.reset();
+                                          formKeys[0].currentState!.reset();
                                         }
                                         setState(() {
-                                          emailC = value;
+                                          inputs[0] = value;
                                         });
                                       },
                                       autovalidateMode: bools[0] ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
@@ -152,7 +152,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                             children:<Widget> [
 
                               Form(
-                                key: password,
+                                key:  formKeys[1],
                                 child: Expanded(
                                   child: TextFormField(
                                     inputFormatters: [
@@ -162,10 +162,10 @@ class _sign_in_pageState extends State<sign_in_page> {
                                     maxLength: 12,
                                     onChanged: (value){
                                       if (value.isEmpty) {
-                                        password.currentState!.reset();
+                                        formKeys[1].currentState!.reset();
                                       }
                                       setState(() {
-                                        passwordC = value;
+                                        inputs[1] = value;
                                       });
                                     },
                                     obscureText: passwordVisible,
@@ -180,7 +180,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       }
                                       else if (value.length != 12) {
                                         errors.add('password should be 8-12 character \n & without special character');
-                                      }if(passwordC.contains(emailC)){
+                                      }if(inputs[1].contains(inputs[0])){
                                         errors.add('password shouldn\'t contain email');
                                       } if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
                                      if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){
@@ -245,7 +245,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                             margin: const EdgeInsets.only(bottom:20,top:45),
                                 child: ElevatedButton(
                                     onPressed: (){
-                                          if (email.currentState!.validate()&&password.currentState!.validate()) {
+                                          if ( formKeys[0].currentState!.validate()&& formKeys[1].currentState!.validate()) {
                                                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                                     log_in_page()), (Route<dynamic> route) => false);
                                               }

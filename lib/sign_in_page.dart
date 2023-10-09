@@ -178,7 +178,7 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       if (value.isEmpty) {
                                         errors.add('Please enter your password');
                                       }
-                                      else if (value.length != 12) {
+                                      else  if(value.length<8 ||value.length>12){
                                         errors.add('password should be 8-12 character \n & without special character');
                                       }if(inputs[1].contains(inputs[0])){
                                         errors.add('password shouldn\'t contain email');

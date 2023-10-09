@@ -192,12 +192,15 @@ class _sign_up_pageState extends State<sign_up_page> {
                                               if (value.isEmpty) {
                                                 errors.add('Please enter your last name');
                                               }
-                                              else if(value.length<5||value.length>15){
-                                                errors.add('last name must be persian');
-                                              }if(value[1].contains(value[0])){
-                                                errors.add('last name shouldn\'t contain first name');
-                                              } else if(!RegExp(r'^[\u0600-\u06FF\s]+\{5,15}$').hasMatch(value)){
+                                               else if(value.length<5||value.length>15){
                                                 errors.add('last name must be persian between 5-15 character');
+                                              }
+                                               if(value.contains(value[0])){
+                                                errors.add('last name shouldn\'t contain first name');
+
+                                              }
+                                             else if(!RegExp(r'^[\u0600-\u06FF\s]+\{5,15}$').hasMatch(value)){
+                                                errors.add('last name must be persian');
                                               }
                                               if (errors.isNotEmpty) {
                                                 return errors.join('.\n');
@@ -408,8 +411,9 @@ class _sign_up_pageState extends State<sign_up_page> {
                                           List<String> errors = [];
                                           value = (value ?? '').trim();
                                           if (value.isEmpty) {
-                                            errors.add('Please enter your password');
-                                          }  else if (value.length != 12) {
+                                            errors.add(
+                                                'Please enter your password');
+                                          }else  if(value.length<8 ||value.length>12){
                                             errors.add('password should be 8-12 character \n & without special character');
                                           } if(value[4].contains(value[3])){
                                             errors.add('password shouldn\'t contain email');

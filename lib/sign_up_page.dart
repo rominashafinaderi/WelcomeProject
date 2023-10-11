@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:welcomeproject/constatns.dart';
@@ -14,7 +15,7 @@ class _sign_up_pageState extends State<sign_up_page> {
 
   late List<GlobalKey<FormState>> formKeys = List.generate(5, (index) => GlobalKey());
   bool passwordVisible=false;
-
+  final mybuttonkey = GlobalKey();
   late List<FocusNode> focus;
   List<bool> bools = List.generate(5, (index) => false);
    late List<String> inputs ;
@@ -61,13 +62,30 @@ class _sign_up_pageState extends State<sign_up_page> {
                 children:<Widget> [
                   Expanded(
                     flex:1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(image: AssetImage('assets/back2.jpg'),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.bottomCenter
-                          )
+                    child: Stack(
+                      children:[
+                        Container(
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(image: AssetImage('assets/back2.jpg'),
+                                fit: BoxFit.cover,
+                                alignment: Alignment.bottomCenter
+                            )
+                        ),
                       ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 14,top: 8),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 28.0,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ]
                     ),
                   ),
                   Expanded(
@@ -478,7 +496,22 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom:10,top: 10),
                                     child: ElevatedButton(
-                                        onPressed: (){
+                                      key: mybuttonkey,
+                                        onPressed: () async {
+                                          RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
+                                          Offset position = renderbox.localToGlobal(Offset.zero);
+                                          double x = position.dx;
+                                          double y = position.dy;
+                                          print(x);
+                                          print(y);
+                                          GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+                                            position: Offset(x, y),
+                                          )); //trigger button up,
+                                          await Future.delayed(Duration(milliseconds: 500));
+
+                                          GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+                                            position: Offset(x, y),
+                                          )); //trigger button down
                                           if (formKeys[0].currentState!.validate()&&
                                               formKeys[1].currentState!.validate()&&
                                               formKeys[2].currentState!.validate()&&
@@ -515,11 +548,23 @@ class _sign_up_pageState extends State<sign_up_page> {
                                   ),
                                 ),
                                 TextButton(
-                                  onPressed: (){
+                                  onPressed: ()  async {
+                                    RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
+                                    Offset position = renderbox.localToGlobal(Offset.zero);
+                                    double x = position.dx;
+                                    double y = position.dy;
+                                    print(x);
+                                    print(y);
+                                    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+                                      position: Offset(x, y),
+                                    )); //trigger button up,
+                                    await Future.delayed(Duration(milliseconds: 500));
+                                    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+                                      position: Offset(x, y),
+                                    )); //trigger button down
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context)=>  sign_in_page())
-                                    );
-                                  },
+                                    );                                  },
                                   style:TextButton.styleFrom(
                                     backgroundColor: Colors.transparent,
                                   ),

@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:welcomeproject/constatns.dart';
 import 'package:welcomeproject/log_in_page.dart';
 import 'package:welcomeproject/sign_up_page.dart';
+
 class sign_in_page extends StatefulWidget {
   const sign_in_page({super.key});
 
@@ -11,14 +13,12 @@ class sign_in_page extends StatefulWidget {
 }
 
 class _sign_in_pageState extends State<sign_in_page> {
-
   late List<GlobalKey<FormState>> formKeys = List.generate(2, (index) => GlobalKey());
-
-
-  bool passwordVisible=false;
+  final mybuttonkey = GlobalKey();
+  bool passwordVisible = false;
   late List<FocusNode> focus;
   List<bool> bools = List.generate(2, (index) => false);
-  late List<String> inputs ;
+  late List<String> inputs;
 
   @override
   void initState() {
@@ -35,67 +35,73 @@ class _sign_in_pageState extends State<sign_in_page> {
           }
         }
       });
-
     }
   }
+
   @override
   void dispose() {
     focus[0].dispose();
     focus[1].dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-
-    return  SafeArea(
+    return SafeArea(
       child: Scaffold(
-        body: CustomScrollView(
-          physics:ClampingScrollPhysics(),
-          slivers:[ SliverFillRemaining(
+        body: CustomScrollView(physics: ClampingScrollPhysics(), slivers: [
+          SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
-              children:<Widget> [
+              children: <Widget>[
                 Expanded(
-                  flex:3,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/back2.jpg'),
-                            fit: BoxFit.cover,
-                            alignment: Alignment.bottomCenter
-                        )
-                    ),
+                  flex: 3,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/back2.jpg'), fit: BoxFit.cover, alignment: Alignment.topCenter)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 14,top: 8),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 28.0,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
                     flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:20),
-                      child: Column(
-                        children:<Widget>[
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(children: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:<Widget> [
-                              Text('SIGN IN',
-                                  style: Theme.of(context).textTheme.headlineMedium!
-                              ),
+                            children: <Widget>[
+                              Text('SIGN IN', style: Theme.of(context).textTheme.headlineMedium!),
                             ],
                           ),
                           const Spacer(),
-
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 30,top: 30),
-                            child:  Row(
+                            padding: const EdgeInsets.only(bottom: 30, top: 30),
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children:<Widget> [
+                              children: <Widget>[
                                 Form(
                                   key: formKeys[0],
                                   child: Expanded(
                                     child: TextFormField(
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.deny(
-                                            RegExp(r'\s')),
+                                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
                                       ],
-                                      onChanged: (value){
+                                      onChanged: (value) {
                                         if (value.isEmpty) {
                                           formKeys[0].currentState!.reset();
                                         }
@@ -110,37 +116,25 @@ class _sign_in_pageState extends State<sign_in_page> {
                                         valueE = (valueE ?? '').trim();
                                         if (valueE.isEmpty) {
                                           errors.add('please enter your email');
-                                        }  else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
+                                        } else if (!RegExp(r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$').hasMatch(valueE)) {
                                           errors.add('email pattern is wrong');
-                                        }if (errors.isNotEmpty) {
+                                        }
+                                        if (errors.isNotEmpty) {
                                           return errors.join('.\n');
                                         }
                                         return null;
                                       },
-                                       style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.white),
                                       cursorColor: Colors.white,
-                                      decoration:  InputDecoration(
-                                        prefixIcon:Icon(Icons.alternate_email,color:kPrimaryColor),
+                                      decoration: InputDecoration(
+                                        prefixIcon: Icon(Icons.alternate_email, color: kPrimaryColor),
                                         hintText: "EMAIL",
-                                        hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: kPrimaryColor
-                                            )
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white.withOpacity(0.5)
-                                            )
-                                        ),
-                                        errorBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.red
-                                            )
-                                        ),
+                                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: kPrimaryColor)),
+                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withOpacity(0.5))),
+                                        errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
                                       ),
                                       keyboardType: TextInputType.emailAddress,
-
                                     ),
                                   ),
                                 )
@@ -149,18 +143,16 @@ class _sign_in_pageState extends State<sign_in_page> {
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children:<Widget> [
-
+                            children: <Widget>[
                               Form(
-                                key:  formKeys[1],
+                                key: formKeys[1],
                                 child: Expanded(
                                   child: TextFormField(
                                     inputFormatters: [
-                                      FilteringTextInputFormatter.deny(
-                                          RegExp(r'\s')),
+                                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
                                     ],
                                     maxLength: 12,
-                                    onChanged: (value){
+                                    onChanged: (value) {
                                       if (value.isEmpty) {
                                         formKeys[1].currentState!.reset();
                                       }
@@ -177,131 +169,137 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       value = (value ?? '').trim();
                                       if (value.isEmpty) {
                                         errors.add('Please enter your password');
-                                      }
-                                      else  if(value.length<8 ||value.length>12){
+                                      } else if (value.length < 8 || value.length > 12) {
                                         errors.add('password should be 8-12 character \n & without special character');
-                                      }if(inputs[1].contains(inputs[0])){
+                                      }
+                                      if (inputs[1].contains(inputs[0])) {
                                         errors.add('password shouldn\'t contain email');
-                                      } if(!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)){
-                                     if(RegExp(r'^[a-zA-Z]+$').hasMatch(value)){
-                                        errors.add('password must contain number ');
-                                      }if(RegExp(r'^[0-9]+$').hasMatch(value)){
-                                        errors.add('password must contain alphabet');
                                       }
+                                      if (!RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,12}$').hasMatch(value)) {
+                                        if (RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                                          errors.add('password must contain number ');
+                                        }
+                                        if (RegExp(r'^[0-9]+$').hasMatch(value)) {
+                                          errors.add('password must contain alphabet');
+                                        }
                                       }
-                                        if (errors.isNotEmpty) {
+                                      if (errors.isNotEmpty) {
                                         return errors.join('.\n');
                                       }
                                       return null;
                                     },
                                     cursorColor: Colors.white,
-                                    decoration:  InputDecoration(
-                                        prefixIcon: Icon(Icons.lock,color:kPrimaryColor),
-
-                                        counterText:"",
+                                    decoration: InputDecoration(
+                                        prefixIcon: Icon(Icons.lock, color: kPrimaryColor),
+                                        counterText: "",
                                         suffixIcon: IconButton(
                                           icon: Icon(
-                                              passwordVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,color:Colors.grey[700],),
-                                          onPressed: (){
+                                            passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                            color: Colors.grey[700],
+                                          ),
+                                          onPressed: () {
                                             setState(
-                                                  () {
+                                              () {
                                                 passwordVisible = !passwordVisible;
                                               },
                                             );
                                           },
                                         ),
                                         hintText: "PASSWORD",
-                                        hintStyle:TextStyle(color: Colors.white.withOpacity(0.5)) ,
+                                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
                                         fillColor: Colors.white,
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: kPrimaryColor
-                                            )
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.white.withOpacity(0.5)
-                                          )
-                                        ),
-                                      errorBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.red
-                                        )
-                                      )
-                                    ),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: kPrimaryColor)),
+                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white.withOpacity(0.5))),
+                                        errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red))),
                                     keyboardType: TextInputType.text,
-
                                   ),
                                 ),
                               )
                             ],
                           ),
-                          const  Spacer(),
+                          const Spacer(),
+                          FittedBox(
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 20, top: 45),
+                              child: ElevatedButton(
+                                  key: mybuttonkey,
+                                  onPressed: () async {
+                                    RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
+                                    Offset position = renderbox.localToGlobal(Offset.zero);
+                                    double x = position.dx;
+                                    double y = position.dy;
 
-                        FittedBox(
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom:20,top:45),
-                                child: ElevatedButton(
-                                    onPressed: (){
-                                          if ( formKeys[0].currentState!.validate()&& formKeys[1].currentState!.validate()) {
-                                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                                                    log_in_page()), (Route<dynamic> route) => false);
-                                              }
-                                    },
-                                    style: TextButton.styleFrom(
-                                        backgroundColor: kPrimaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(24),
-                                        )
+                                    print(x);
+                                    print(y);
+                                    GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+                                      position: Offset(x, y),
+                                    )); //trigger button up,
+
+                                    await Future.delayed(Duration(milliseconds: 500));
+                                    //add delay between up and down button
+
+                                    GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+                                      position: Offset(x, y),
+                                    )); //trigger button down
+                                    if (formKeys[0].currentState!.validate() && formKeys[1].currentState!.validate()) {
+                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => log_in_page()), (Route<dynamic> route) => false);
+                                    }
+                                  },
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: kPrimaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(24),
+                                      )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                                    child: Text(
+                                      "LOG IN",
+                                      style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.black),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal:80,vertical:15),
-
-                                      child: Text(
-                                        "LOG IN",
-                                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                                            color: Colors.black
-                                        ),
-                                      ),
-                                    )//Padding
-                                ),
+                                  ) //Padding
+                                  ),
+                            ),
                           ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(bottom:0),
-                          child: Text('Don\'t have an account ?',
-                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16,fontWeight: FontWeight.normal)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 0),
+                            child: Text('Don\'t have an account ?', style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16, fontWeight: FontWeight.normal)),
                           ),
-                        ),
                           TextButton(
-                            onPressed: (){
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context)=>  sign_up_page())
-                              );
+                            onPressed: ()  async {
+                              RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
+                              Offset position = renderbox.localToGlobal(Offset.zero);
+                              double x = position.dx;
+                              double y = position.dy;
+
+                              print(x);
+                              print(y);
+
+                              GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+                                position: Offset(x, y),
+                              )); //trigger button up,
+
+                              await Future.delayed(Duration(milliseconds: 500));
+                              //add delay between up and down button
+
+                              GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+                                position: Offset(x, y),
+                              )); //trigger button down
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => sign_up_page()));
                             },
-                            style:TextButton.styleFrom(
+                            style: TextButton.styleFrom(
                               backgroundColor: Colors.transparent,
                             ),
-                            child:  Text('SIGN UP',
-                                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),
-                              ),
-
-
+                            child: Text(
+                              'SIGN UP',
+                              style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          SizedBox(height:45)
-                        ]
-                    )
-
-                    ))
+                          SizedBox(height: 45)
+                        ])))
               ],
-
             ),
           ),
-        ]
-        ),
+        ]),
         // resizeToAvoidBottomInset: false,
       ),
     );

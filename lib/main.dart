@@ -1,17 +1,16 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:welcomeproject/constatns.dart';
 import 'package:welcomeproject/sign_in_page.dart';
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+   MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
         debugShowCheckedModeBanner: false,
         title: 'welcomePage',
         theme: ThemeData(
@@ -47,12 +46,13 @@ class MyApp extends StatelessWidget {
           primaryColor: kPrimaryColor,
           scaffoldBackgroundColor: kBackgroundColor,
         ),
-        home: const WelcomePage());
+        home:  WelcomePage());
   }
 }
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+   WelcomePage({super.key});
+  final mybuttonkey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class WelcomePage extends StatelessWidget {
                         flex: 3,
                         child: Container(
                           decoration: const BoxDecoration(
-                            image: DecorationImage(image: AssetImage('assets/background.jpg'), fit: BoxFit.cover),
+                            image: DecorationImage(image: AssetImage('assets/background.jpg'),fit: BoxFit.cover),
                           ),
                         )),
                     SizedBox(height:20),
@@ -102,10 +102,26 @@ class WelcomePage extends StatelessWidget {
                               child: Container(
                                 margin: const EdgeInsets.only(bottom:40,top: 20),
                                 child: ElevatedButton(
-                                    onPressed: (){
+
+                                    key: mybuttonkey,
+                                    onPressed: () async {
+                                      RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
+                                      Offset position = renderbox.localToGlobal(Offset.zero);
+                                      double x = position.dx;
+                                      double y = position.dy;
+                                      print(x);
+                                      print(y);
+                                      GestureBinding.instance.handlePointerEvent(PointerDownEvent(
+                                        position: Offset(x, y),
+                                      )); //trigger button up,
+                                      await Future.delayed(Duration(milliseconds: 500));
+
+                                      GestureBinding.instance.handlePointerEvent(PointerUpEvent(
+                                        position: Offset(x, y),
+                                      )); //trigger button down
                                       Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> const sign_in_page())
-                                      );
+                                          MaterialPageRoute(builder: (context)=>  sign_in_page()));
+
                                     },
                                     style: TextButton.styleFrom(
                                         backgroundColor: kPrimaryColor,

@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
 
 class WelcomePage extends StatelessWidget {
    WelcomePage({super.key});
-  final mybuttonkey = GlobalKey();
+  final mybuttonkeyF = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -100,28 +100,31 @@ class WelcomePage extends StatelessWidget {
                             ),
                             FittedBox(
                               child: Container(
-                                margin: const EdgeInsets.only(bottom:40,top: 20),
+                                margin: const EdgeInsets.only(bottom:30,top: 20),
                                 child: ElevatedButton(
-
-                                    key: mybuttonkey,
+                                    key: mybuttonkeyF,
                                     onPressed: () async {
-                                      RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
+                                      RenderBox renderbox = mybuttonkeyF.currentContext!.findRenderObject() as RenderBox;
                                       Offset position = renderbox.localToGlobal(Offset.zero);
                                       double x = position.dx;
                                       double y = position.dy;
+
                                       print(x);
                                       print(y);
+
+
                                       GestureBinding.instance.handlePointerEvent(PointerDownEvent(
                                         position: Offset(x, y),
                                       )); //trigger button up,
+
                                       await Future.delayed(Duration(milliseconds: 500));
+                                      //add delay between up and down button
 
                                       GestureBinding.instance.handlePointerEvent(PointerUpEvent(
                                         position: Offset(x, y),
-                                      )); //trigger button down
+                                      )); //trigger button down down
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context)=>  sign_in_page()));
-
                                     },
                                     style: TextButton.styleFrom(
                                         backgroundColor: kPrimaryColor,

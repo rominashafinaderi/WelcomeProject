@@ -25,19 +25,7 @@ class log_in_page extends StatelessWidget {
                               decoration: const BoxDecoration(
                                 image: DecorationImage(image: AssetImage('assets/background.jpg'), fit: BoxFit.cover),
                               ),
-                            ),  Padding(
-                                padding: const EdgeInsets.only(right: 14,top: 8),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.white,
-                                    size: 28.0,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ),
+                            ),
 
                             ]
                           )

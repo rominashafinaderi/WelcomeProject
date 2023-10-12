@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
         title: 'welcomePage',
         theme: ThemeData(
           useMaterial3: true,
-
                colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryColor),
           textTheme: const TextTheme(
               headlineMedium: TextStyle(
@@ -52,7 +51,6 @@ class MyApp extends StatelessWidget {
 
 class WelcomePage extends StatelessWidget {
    WelcomePage({super.key});
-  final mybuttonkeyF = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -99,55 +97,41 @@ class WelcomePage extends StatelessWidget {
                               ),
                             ),
                             FittedBox(
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom:30,top: 20),
+                              fit: BoxFit.contain,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 40),
                                 child: ElevatedButton(
-                                    key: mybuttonkeyF,
-                                    onPressed: () async {
-                                      RenderBox renderbox = mybuttonkeyF.currentContext!.findRenderObject() as RenderBox;
-                                      Offset position = renderbox.localToGlobal(Offset.zero);
-                                      double x = position.dx;
-                                      double y = position.dy;
+                                        onPressed: () async {
+                                          await Future.delayed(Duration(milliseconds: 150));
+                                          Navigator.push(context,
+                                              MaterialPageRoute(builder: (context)=>  sign_in_page()));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.black, // Background color
+                                          shadowColor: kPrimaryColor,
+                                          enableFeedback: true,
+                                          backgroundColor: kPrimaryColor,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(22),
+                                            )
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal:14,vertical:14),
 
-                                      print(x);
-                                      print(y);
-
-
-                                      GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-                                        position: Offset(x, y),
-                                      )); //trigger button up,
-
-                                      await Future.delayed(Duration(milliseconds: 500));
-                                      //add delay between up and down button
-
-                                      GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-                                        position: Offset(x, y),
-                                      )); //trigger button down down
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=>  sign_in_page()));
-                                    },
-                                    style: TextButton.styleFrom(
-                                        backgroundColor: kPrimaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(22),
-                                        )
+                                          child: Row(
+                                        children: [
+                                              Text("START LEARNING",
+                                                  style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black)),
+                                            const SizedBox(width: 16),
+                                            const Icon(Icons.arrow_forward,
+                                                color: Colors.black)
+                                      ],
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal:14,vertical:14),
-
-                                      child: Row(
-                                    children: [
-                                          Text("START LEARNING",
-                                              style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black)),
-                                        const SizedBox(width: 16),
-                                        const Icon(Icons.arrow_forward,
-                                            color: Colors.black)
-                                  ],
-                                ),
-                                    )//Padding
-                                ),
+                                        )//Padding
+                                    ),
                               ),
                             ),
+
 
                           ],
                         )

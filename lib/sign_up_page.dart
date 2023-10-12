@@ -15,9 +15,6 @@ class _sign_up_pageState extends State<sign_up_page> {
 
   late List<GlobalKey<FormState>> formKeys = List.generate(5, (index) => GlobalKey());
   bool passwordVisible=false;
-  final mybuttonkey2 = GlobalKey();
-  final mybuttonkey3 = GlobalKey();
-
   late List<FocusNode> focus;
   List<bool> bools = List.generate(5, (index) => false);
    late List<String> inputs ;
@@ -487,22 +484,8 @@ class _sign_up_pageState extends State<sign_up_page> {
                                     child: Container(
                                       margin: const EdgeInsets.only(bottom:8,top: 8),
                                       child: ElevatedButton(
-                                        key: mybuttonkey2,
                                           onPressed: () async {
-                                            RenderBox renderbox = mybuttonkey2.currentContext!.findRenderObject() as RenderBox;
-                                            Offset position = renderbox.localToGlobal(Offset.zero);
-                                            double x = position.dx;
-                                            double y = position.dy;
-                                            print(x);
-                                            print(y);
-                                            GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-                                              position: Offset(x, y),
-                                            )); //trigger button up,
-                                            await Future.delayed(Duration(milliseconds: 500));
-
-                                            GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-                                              position: Offset(x, y),
-                                            )); //trigger button down
+                                            await Future.delayed(Duration(milliseconds: 150));
                                             if (formKeys[0].currentState!.validate()&&
                                                 formKeys[1].currentState!.validate()&&
                                                 formKeys[2].currentState!.validate()&&
@@ -513,10 +496,13 @@ class _sign_up_pageState extends State<sign_up_page> {
                                                   sign_in_page()), (Route<dynamic> route) => false);
                                             }
                                           },
-                                          style: TextButton.styleFrom(
+                                          style: ElevatedButton.styleFrom(
+                                              foregroundColor: Colors.black, // Background color
+                                              shadowColor: kPrimaryColor,
+                                              enableFeedback: true,
                                               backgroundColor: kPrimaryColor,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(24),
+                                                borderRadius: BorderRadius.circular(22),
                                               )
                                           ),
                                           child: Padding(
@@ -535,27 +521,16 @@ class _sign_up_pageState extends State<sign_up_page> {
                                       style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16,fontWeight: FontWeight.normal)
                                     ),
                                     TextButton(
-                                      key: mybuttonkey3,
                                       onPressed: ()  async {
-
-                                        RenderBox renderbox = mybuttonkey3.currentContext!.findRenderObject() as RenderBox;
-                                        Offset position = renderbox.localToGlobal(Offset.zero);
-                                        double x = position.dx;
-                                        double y = position.dy;
-                                        print(x);
-                                        print(y);
-                                        GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-                                          position: Offset(x, y),
-                                        )); //trigger button up,
-                                        await Future.delayed(Duration(milliseconds: 500));
-                                        GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-                                          position: Offset(x, y),
-                                        )); //trigger button down
+                                        await Future.delayed(Duration(milliseconds: 150));
                                         Navigator.push(context,
                                             MaterialPageRoute(builder: (context)=>  sign_in_page())
                                         );                                  },
-                                      style:TextButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
+                                      style: TextButton.styleFrom(
+                                        // backgroundColor: Colors.transparent,
+                                        foregroundColor: kPrimaryColor, // Background color
+                                        shadowColor: kPrimaryColor,
+                                        enableFeedback: true,
                                       ),
                                       child:  Text('SIGN IN',
                                         style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14,fontWeight: FontWeight.bold),

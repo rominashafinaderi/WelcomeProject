@@ -14,9 +14,6 @@ class sign_in_page extends StatefulWidget {
 
 class _sign_in_pageState extends State<sign_in_page> {
   late List<GlobalKey<FormState>> formKeys = List.generate(2, (index) => GlobalKey());
-  final mybuttonkey = GlobalKey();
-  final mybuttonkey1 = GlobalKey();
-
   bool passwordVisible = false;
   late List<FocusNode> focus;
   List<bool> bools = List.generate(2, (index) => false);
@@ -217,37 +214,23 @@ class _sign_in_pageState extends State<sign_in_page> {
                                 height: 70,
                               ),
                               FittedBox(
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  child: ElevatedButton(
-                                      key: mybuttonkey,
+                                fit: BoxFit.contain,
+                                child: ElevatedButton(
                                       onPressed: () async {
-                                        RenderBox renderbox = mybuttonkey.currentContext!.findRenderObject() as RenderBox;
-                                        Offset position = renderbox.localToGlobal(Offset.zero);
-                                        double x = position.dx;
-                                        double y = position.dy;
-
-                                        print(x);
-                                        print(y);
-                                        GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-                                          position: Offset(x, y),
-                                        )); //trigger button up,
-
-                                        await Future.delayed(Duration(milliseconds: 500));
-                                        //add delay between up and down button
-
-                                        GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-                                          position: Offset(x, y),
-                                        )); //trigger button down
+                                        await Future.delayed(Duration(milliseconds: 150));
                                         if (formKeys[0].currentState!.validate() && formKeys[1].currentState!.validate()) {
                                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => log_in_page()), (Route<dynamic> route) => false);
                                         }
                                       },
-                                      style: TextButton.styleFrom(
-                                          backgroundColor: kPrimaryColor,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(24),
-                                          )),
+                                    style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.black, // Background color
+                                        shadowColor: kPrimaryColor,
+                                        enableFeedback: true,
+                                        backgroundColor: kPrimaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(22),
+                                        )
+                                    ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                                         child: Text(
@@ -257,36 +240,20 @@ class _sign_in_pageState extends State<sign_in_page> {
                                       ) //Padding
                                       ),
                                 ),
-                              ),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 0),
+                                padding: const EdgeInsets.only(top: 10),
                                 child: Text('Don\'t have an account ?', style: Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 16, fontWeight: FontWeight.normal)),
                               ),
                               TextButton(
-                                key: mybuttonkey1,
                                 onPressed: () async {
-                                  RenderBox renderbox = mybuttonkey1.currentContext!.findRenderObject() as RenderBox;
-                                  Offset position = renderbox.localToGlobal(Offset.zero);
-                                  double x = position.dx;
-                                  double y = position.dy;
-
-                                  print(x);
-                                  print(y);
-
-                                  GestureBinding.instance.handlePointerEvent(PointerDownEvent(
-                                    position: Offset(x, y),
-                                  )); //trigger button up,
-
-                                  await Future.delayed(Duration(milliseconds: 500));
-                                  //add delay between up and down button
-
-                                  GestureBinding.instance.handlePointerEvent(PointerUpEvent(
-                                    position: Offset(x, y),
-                                  )); //trigger button down
+                                  await Future.delayed(Duration(milliseconds: 150));
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => sign_up_page()));
                                 },
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
+                                  // backgroundColor: Colors.transparent,
+                                  foregroundColor: kPrimaryColor, // Background color
+                                  shadowColor: kPrimaryColor,
+                                  enableFeedback: true,
                                 ),
                                 child: Text(
                                   'SIGN UP',
